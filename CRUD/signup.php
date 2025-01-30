@@ -1,47 +1,60 @@
 <?php
-// print_r($_POST);
-$con =mysqli_connect('localhost','root','','crud');
+$con=mysqli_connect('localhost','root','','crud');
 if($_SERVER['REQUEST_METHOD']=='POST'){
-    if(empty($_POST['fname'])){
+    if(empty($_POST['name'])){
         echo "<script>
-        alert ('First name must be required');
+        alert ('Name is required');
+        </script>";
+    }elseif(empty($_POST['email'])){
+        echo "<script>
+        alert ('Email is required');
+        </script>";
+    }elseif(empty($_POST['password'])){
+        echo "<script>
+        alert ('Password is required');
+        </script>";
+    }elseif(empty($_POST['c_password'])){
+        echo "<script>
+        alert ('Confirm Password is required');
         </script>";
     }
-    elseif(empty($_POST['lname'])){
-        echo "<script>
-        alert ('Last name must be required');
-        </script>";
-    }elseif(empty($_POST['phone'])){
-        echo "<script>
-        alert ('Phone number must be required');
-        </script>";
-    }
-    elseif(empty($_POST['email'])){
-        echo "<script>
-        alert ('Email must be required');
-        </script>";
-    }else{
-        $id=$_POST['id'];
-        $fname=$_POST['fname'];
-        $lname=$_POST['lname'];
-        $phone=$_POST['phone'];
-        $email=$_POST['email'];
-        $sql="update users set fname='$fname',lname='$lname',phone='$phone',email='$email' where id=$id";
-        if(mysqli_query($con,$sql)){
-            echo "<script>
-            alert ('Your account is updated');
-            window.location.href='read.php';
-            </script>";
+    else{
+        $name=sanitize($_POST['name']);
+        $email=sanitize($_POST['email']);
+        $password=sanitize($_POST['password']);
+        $c_password=sanitize($_POST['c_password']);
+        if (!empty($email)){
+            $sql="select*from signup where email='$email'";
+            $data=mysqli_query($con,$sql);
+            if(mysqli_num_rows($data)>0){
+                echo "<script>
+                alert ('Email Already Exist');
+                </script>"; 
+            } 
+            elseif ($password != $c_password){
+                echo "<script>
+                alert ('Password or confirm password not matched');
+                </script>";  
+            }else{
+                $sql="insert into signup (name,email,password)values('$name','$email','$password')";
+                if(mysqli_query($con,$sql)){
+                    echo "<script>
+                    alert ('Account is created');
+                    window.location.href='login.php';
+                    </script>";
+                }
+            }
         }
+          
     }
-}
-if (isset($_GET['id'])){
-    $id=$_GET['id'];
-    $sql="select* from users where id=$id";
-    $result=mysqli_query($con,$sql);
-    if(mysqli_num_rows($result)>0){
-        $data=mysqli_fetch_assoc($result);
-        echo $data['id'];
+
+    }
+    function sanitize($data){
+        $sanitizedata = trim($data);
+        $sanitizedata =htmlspecialchars($sanitizedata);//html content simple charactor k form m send krn k liye use krte h
+        return $sanitizedata;
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,7 +62,7 @@ if (isset($_GET['id'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update</title>
+    <title>Signup</title>
     <style>
 *{
     margin: 0px;
@@ -188,53 +201,37 @@ body{
    <div class="main-container">
         <!-- Form Section Start -->
             <form action="" method="post">
-                <h2 class="reg-heading"> REGISTRATION</h2>
+                <h2 class="reg-heading"> REGISTRATION SIGNUP</h2>
 
                 <div class="input-row">
-
+                <div class="input-box">
+                        <label for="name" class="reg-label">Name :</label> 
+                        <input type="text"  class="reg-input"  name="name">
+                    </div>
                     <div class="input-box">
-                        <label for="name" class="reg-label">First Name:</label> 
-                        <input type="text"  class="reg-input" name="fname"value="<?= $data['fname']?>">
+                        <label for="email" class="reg-label">Email:</label> 
+                        <input type="email"  class="reg-input"  name="email">
+                    </div>
+
+                    <div class="input-box">    
+                        <label for="password" class="reg-label">Password :</label>
+                        <input type="password" class="reg-input" name="password">    
                     </div>
                     <div class="input-box">    
-                        <label for="name" class="reg-label">Last Name:</label>
-                        <input type="text" class="reg-input" name="lname" value="<?= $data['lname']?>">    
+                        <label for="password" class="reg-label">Confirm Password :</label>
+                        <input type="password" class="reg-input" name="c_password">    
                     </div>
 
                 </div>    
-
-
-                <div class="input-row">
-
-                    <div class="input-box"> 
-                        <label for="name" class="reg-label">Phone:</label>
-                        <input type="number" class="reg-input" name="phone" value="<?= $data['phone']?>">
-                    </div>
-                    <div class="input-box">
-                        <label for="name" class="reg-label">Email:</label>
-                        <input type="email" class="reg-input" name="email" value="<?= $data['email']?>">    
-                    </div>
-                    <div class="input-box"> 
-                        <input type="hidden" class="reg-input" name="id" value="<?= $data['id']?>">
-                    </div>
-                </div>
                 <!-- <div class="button"> -->
                     <div class="button">
-                     <button type="submit" class="reg-button">UPDATE ACCOUNt</button>
+                     <button type="submit" class="reg-button">login</button>
                     </div> 
                 <!-- </div> -->
-                <div class="reg-link">
-                 <h5 class="reg-h5">Already Have a Account? <a href="#">Login</a></h5>
-                </div> 
+               
             </form>  
         <!-- Form Section End -->
     </div>
     
 </body>
 </html>
-<?php
-  }
-}else {
-    header('Location:read.php');
-}
-?>

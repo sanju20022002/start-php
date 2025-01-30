@@ -1,4 +1,9 @@
 <?php
+//sesson section
+session_start();
+if(!isset($_SESSION['user'])){
+    header('Location:login.php');
+}//session section
 $con = mysqli_connect('localhost','root','','crud');
 if($_SERVER['REQUEST_METHOD']=='POST'){
      if(empty($_POST['fname'])){

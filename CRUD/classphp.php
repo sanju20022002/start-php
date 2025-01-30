@@ -14,11 +14,17 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         window.location.href='class.php';
         </script>";
     }
+    elseif(empty($_POST['gender'])){
+        echo "<script>
+        alert ('plese check minimum one checkbox');
+        window.location.href='class.php';
+        </script>";
+    }
     else{
         $country=$_POST['country'];
         $greeting=implode(',',$_POST['greeting']);
-    
-        $sql="insert into class(country,greeting)values('$country','$greeting')";
+        $country=$_POST['gender'];
+        $sql="insert into class(country,greeting,gender)values('$country','$greeting','$gender')";
         if(mysqli_query($con,$sql)){
             echo "<script>
             alert ('data inserted successfully');

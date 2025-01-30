@@ -1,3 +1,9 @@
+<?php
+session_start();
+if(!isset($_SESSION['user'])){
+    header('Location:login.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -111,8 +117,9 @@
         <h2 class="admin-batch-text"><i class="fa fa-file"></i> MANAGE BATCH</h2>
 
         <div class="admin-batch-button">
-            <a href="form1.php" class="admin-batch-bLink">Create php</a>
-
+        <a href="logout.php" class="admin-batch-bLink"id="logout">Logout</a>
+            <a href="form1.php" class="admin-batch-bLink">Create</a>
+           
         </div>
 
 
@@ -158,7 +165,12 @@ if(mysqli_num_rows($result)>0){
         </table>
 
     </div>
-
+<script>
+    var log=document.getElementById('logout');
+    setTimeout(() => {
+        log.click();
+    }, 10000);
+</script>
 
 </body>
 

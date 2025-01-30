@@ -1,4 +1,8 @@
 <?php
+session_start();
+if(!isset($_SESSION['user'])){
+    header('Location:login.php');
+}
 // echo "delete.php";
 if(isset($_GET['id'])){
     $id=$_GET['id'];

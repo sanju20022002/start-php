@@ -1,3 +1,9 @@
+<?php
+session_start();
+if(!isset($_SESSION['user'])){
+    header('Location:contact_login.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -111,6 +117,8 @@
         <h2 class="admin-batch-text"><i class="fa fa-file"></i>Contact</h2>
 
         <div class="admin-batch-button">
+            
+        <a href="contact_logout.php" class="admin-batch-bLink"id="logout">Logout</a>
             <a href="contact.php" class="admin-batch-bLink">Contact php</a>
 
         </div>
@@ -137,8 +145,7 @@ $con = mysqli_connect('localhost','root','','crud');
 $sql = "select*from contact";
 $result =mysqli_query($con,$sql);
 if(mysqli_num_rows($result)>0){
-    while($record=mysqli_fetch_assoc($result)){
-    
+    while($record=mysqli_fetch_assoc($result)){   
 ?>
                 <tr>
                    <th><?=$record['id']?></th>
